@@ -1,2 +1,2 @@
 # api
-An for Farmtory app
+An api for Farmtory app
