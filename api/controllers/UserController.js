@@ -24,7 +24,7 @@ class UserController{
     static async store(request, response){
       const userData = request.body;
       try {
-        const newUser = await database.User.create(userData);
+        const newUser = await database.Users.create(userData);
         return response.status(200).json(newUser);
       } catch (error) {
         response.status(500).json(error.message)
@@ -35,8 +35,8 @@ class UserController{
       const userData = request.body;
       const {id} = request.params;
       try {
-        await database.User.update(userData,{where:{id:Number(id)}});
-        const updatedUser = await database.User.findOne({where:{id:Number(id)}})
+        await database.Users.update(userData,{where:{id:Number(id)}});
+        const updatedUser = await database.Users.findOne({where:{id:Number(id)}})
         return response.status(200).json(updatedUser);
       } catch (error) {
         return response.status(500).json(error.message);
@@ -46,7 +46,7 @@ class UserController{
     static async delete(request, response){
       const {id} = request.params;
      try {
-      await database.User.destoy({where:{id:Number(id)}});
+      await database.Users.destoy({where:{id:Number(id)}});
       response.status(200);
      } catch (error) {
       response.status(500);
