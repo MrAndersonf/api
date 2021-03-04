@@ -1,4 +1,5 @@
 const database = require('../models');
+const Auth = require('../Auth')
 
 class UserController{
 
@@ -22,7 +23,8 @@ class UserController{
     }
 
     static async store(request, response){
-      const userData = request.body;
+      let userData = request.body;
+      userData.password = await Auth.encrypt(userData.password)
       try {
         const newUser = await database.Users.create(userData);
         return response.status(200).json(newUser);
@@ -46,12 +48,26 @@ class UserController{
     static async delete(request, response){
       const {id} = request.params;
      try {
-      await database.Users.destoy({where:{id:Number(id)}});
-      response.status(200);
+      await database.Users.destroy({where:{id:Number(id)}});
+      return response.status(200).json("success: successfuly deleted");
      } catch (error) {
-      response.status(500);
+      return response.status(500).json(error.message);
      }
     }
+
+    static async restore(request, response){
+      const {id} = request.params
+      try {
+      const restoredUser = await database.Users.restore({where:{id:Number(id)}});
+        return response.status(200).json({success:"user restored"})
+      } catch (error) {
+        return response.status(500).json(error.message)
+      }
+    }
+
+    static async login(request, response){
+      response.status(204).send()
+    } 
 
 }
 
