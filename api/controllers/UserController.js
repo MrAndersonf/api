@@ -1,5 +1,7 @@
 const database = require('../models');
 const Auth = require('../Auth')
+const Token = require('../Auth/token')
+const blacklist = require('../../redis/handle-blacklist')
 
 class UserController{
 
@@ -66,6 +68,17 @@ class UserController{
     }
 
     static async login(request, response){
+     try {
+      const jwtToken = Token.create(request.user)
+      response.set('Authorization',jwtToken)
+      response.status(204).send()
+     } catch (error) {
+       response.status(500).json({error:error.message})
+     }
+    } 
+
+    static async logout(request, response){
+      await blacklist.insert(request.token)
       response.status(204).send()
     } 
 

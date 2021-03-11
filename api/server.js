@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const routes = require('./routes');
+const blacklist =  require('../redis/blacklist')
 
 const app = express();
 routes(app);
